@@ -32,13 +32,21 @@ export class ProductsService {
   }
 
   findQuery(limit: number, offset: number, brand: number, category: number) {
-    const products = this.products.filter(
-      (item) => item.brand === brand && item.category === category,
-    );
+    // const products = this.products.filter(
+    //   (item) => item.brand === brand && item.category === category,
+    // );
+    const products = this.products;
     if (!products) {
       return new NotFoundException(`No Products found with this criteria`);
     }
-    return products;
+    console.log('products', products);
+    return {
+      offset: offset,
+      limit: limit,
+      brand: brand,
+      category: category,
+      products,
+    };
   }
 
   create(payload: CreateProductsDto) {

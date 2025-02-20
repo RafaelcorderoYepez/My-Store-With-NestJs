@@ -16,10 +16,6 @@ import { CreateProductsDto, UpdateProductsDto } from '../dtos/products.dtos';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
-  @Get()
-  getAll() {
-    return this.productsService.findAll();
-  }
   // brands list paginated by query
 
   @Get()
@@ -32,17 +28,10 @@ export class ProductsController {
     return this.productsService.findQuery(limit, offset, brand, category);
   }
 
-  // products filtered
-  @Get('filter')
-  getFilter() {
-    return { Response: `I am a filter` };
-  }
-
   // Product for Id
   @Get(':id')
   getOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
-    // return { Response: `Id: ${id}` };
   }
 
   // Product for categories

@@ -22,13 +22,18 @@ export class CategoriesController {
   // Category list paginated by query
 
   @Get()
-  getQuery(@Query('limit') limit = 25, @Query('offset') offset = 0) {
+  getQuery(
+    @Query('limit', ParseIntPipe) limit = 25,
+    @Query('offset', ParseIntPipe) offset = 0,
+  ) {
+    console.log('getQuery');
     return this.categoriesService.findQuery(limit, offset);
   }
 
   // Category for Id
   @Get(':id')
   getOne(@Param('id', ParseIntPipe) id: number) {
+    console.log('getOne');
     return this.categoriesService.findOne(id);
   }
 

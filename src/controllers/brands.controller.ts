@@ -19,7 +19,10 @@ export class BrandsController {
   // brands list paginated by query
 
   @Get()
-  getQuery(@Query('limit') limit = 25, @Query('offset') offset = 0) {
+  getQuery(
+    @Query('limit', ParseIntPipe) limit = 25,
+    @Query('offset', ParseIntPipe) offset = 0,
+  ) {
     return this.brandsService.findQuery(limit, offset);
   }
 
