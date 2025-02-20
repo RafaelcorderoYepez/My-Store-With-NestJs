@@ -26,12 +26,6 @@ export class CategoriesController {
     return this.categoriesService.findQuery(limit, offset);
   }
 
-  // categories filtered
-  @Get('filter')
-  getFilter() {
-    return { Response: `I am a Category filter` };
-  }
-
   // Category for Id
   @Get(':id')
   getOne(@Param('id', ParseIntPipe) id: number) {
@@ -41,10 +35,7 @@ export class CategoriesController {
   // create a category
   @Post()
   create(@Body() payload: CreateCategoriesDto) {
-    return {
-      message: 'to create a category',
-      payload: payload,
-    };
+    return this.categoriesService.create(payload);
   }
 
   // update a category
