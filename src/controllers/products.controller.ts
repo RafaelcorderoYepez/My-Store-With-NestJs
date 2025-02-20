@@ -1,28 +1,36 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  //ParseIntPipe
+} from '@nestjs/common';
+
+import { ProductsService } from '../services/products.service';
+import { ParseIntPipe } from '../common/parse-int.pipe';
+import { CreateProductsDto, UpdateProductsDto } from '../dtos/products.dtos';
 
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+  @Get()
+  getAll() {
+    return this.productsService.findAll();
+  }
   // brands list paginated by query
 
   @Get()
   getQuery(
-    @Query('limit') limit = 25,
-    @Query('offset') offset = 0,
-    @Query('brand') brand: string,
-    @Query('category') category: string,
-  ): {
-    message: string;
-    detail: { limit: string; offset: string; brand: string; category: string };
-  } {
-    return {
-      message: `Products list`,
-      detail: {
-        limit: `${limit}`,
-        offset: `${offset}`,
-        brand: `${brand}`,
-        category: `${category}`,
-      },
-    };
+    @Query('limit', ParseIntPipe) limit = 25,
+    @Query('offset', ParseIntPipe) offset = 0,
+    @Query('brand', ParseIntPipe) brand: number,
+    @Query('category', ParseIntPipe) category: number,
+  ) {
+    return this.productsService.findQuery(limit, offset, brand, category);
   }
 
   // products filtered
@@ -33,50 +41,47 @@ export class ProductsController {
 
   // Product for Id
   @Get(':id')
-  getOne(@Param('id') id: string) {
-    return { Response: `Id: ${id}` };
+  getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.findOne(id);
+    // return { Response: `Id: ${id}` };
   }
 
   // Product for categories
   @Get(':id/categories/:categoryId')
   getByCategory(
-    @Param('id') id: string,
-    @Param('categoryId') categoryId: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
   ) {
     return { params: { ProductId: `${id}`, CategoryId: `${categoryId}` } };
   }
 
   // Product for brands
   @Get(':id/brands/:brandId')
-  getByBrand(@Param('id') id: string, @Param('brandId') brandId: string) {
+  getByBrand(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('brandId', ParseIntPipe) brandId: number,
+  ) {
     return { params: { ProductId: `${id}`, BrandId: `${brandId}` } };
   }
 
   // create a product
   @Post()
-  create(@Body() payload:any) {
-    return {
-      message: 'to create a product',
-      payload: payload
-    };
+  create(@Body() payload: CreateProductsDto) {
+    return this.productsService.create(payload);
   }
 
   // update a product
   @Put(':id')
-  update(@Param('id') id: any, @Body() payload:any) {
-    return {
-      message: 'to update a product',
-      id: id,
-      payload: payload
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateProductsDto,
+  ) {
+    return this.productsService.update(id, payload);
   }
 
   // delete a product
   @Delete(':id')
-  delete(@Param('id') id: any) {
-    return {
-      message: 'to delete a product',
-      id: id
-    };
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.delete(id);
   }
 }
