@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -27,7 +25,6 @@ export class BrandsController {
 
   // Brand for Id
   @Get(':id')
-  @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('id', ParseIntPipe) id: number) {
     return this.brandsService.findOne(id);
   }

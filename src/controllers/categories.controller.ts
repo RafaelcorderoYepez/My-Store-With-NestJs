@@ -1,22 +1,29 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
+
+import { CategoriesService } from '../services/categories.service';
+import {
+  CreateCategoriesDto,
+  UpdateCategoriesDto,
+} from '../dtos/categories.dtos';
 
 @Controller('categories')
 export class CategoriesController {
+  constructor(private categoriesService: CategoriesService) {}
   // Category list paginated by query
 
   @Get()
-  getQuery(
-    @Query('limit') limit = 25,
-    @Query('offset') offset = 0,
-    @Query('brand') brand: string,
-  ): {
-    message: string;
-    detail: { limit: string; offset: string; brand: string };
-  } {
-    return {
-      message: `Categories list`,
-      detail: { limit: `${limit}`, offset: `${offset}`, brand: `${brand}` },
-    };
+  getQuery(@Query('limit') limit = 25, @Query('offset') offset = 0) {
+    return this.categoriesService.findQuery(limit, offset);
   }
 
   // categories filtered
@@ -27,19 +34,13 @@ export class CategoriesController {
 
   // Category for Id
   @Get(':id')
-  getOne(@Param('id') id: string) {
-    return { Response: `Id: ${id}` };
-  }
-
-  // categories for Brands
-  @Get(':id/brands/:brandId')
-  getByBrand(@Param('id') id: string, @Param('brandId') brandId: string) {
-    return { params: { CategoryId: `${id}`, BrandId: `${brandId}` } };
+  getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.categoriesService.findOne(id);
   }
 
   // create a category
   @Post()
-  create(@Body() payload: any) {
+  create(@Body() payload: CreateCategoriesDto) {
     return {
       message: 'to create a category',
       payload: payload,
@@ -48,20 +49,16 @@ export class CategoriesController {
 
   // update a category
   @Put(':id')
-  update(@Param('id') id: any, @Body() payload: any) {
-    return {
-      message: 'to update a category',
-      id: id,
-      payload: payload
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateCategoriesDto,
+  ) {
+    return this.categoriesService.update(id, payload);
   }
 
   // delete a category
   @Delete(':id')
-  delete(@Param('id') id: any) {
-    return {
-      message: 'to delete a category',
-      id: id
-    };
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.categoriesService.delete(id);
   }
 }

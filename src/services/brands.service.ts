@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Brand } from '../entities/brands.entity';
-import { CreateBrandsDto, UpdateBrandsDto} from '../dtos/brands.dtos';
+import { CreateBrandsDto, UpdateBrandsDto } from '../dtos/brands.dtos';
 
 @Injectable()
 export class BrandsService {
@@ -35,8 +35,8 @@ export class BrandsService {
     return {
       offset: offset,
       limit: limit,
-      brands
-    }
+      brands,
+    };
   }
 
   create(payload: CreateBrandsDto) {
@@ -79,5 +79,4 @@ export class BrandsService {
       };
     }
   }
-
 }
