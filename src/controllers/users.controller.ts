@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { UsersService  } from '../services/users.service';
+import { UsersService } from '../services/users.service';
 import { CreateUsersDto, UpdateUsersDto } from '../dtos/users.dtos';
 
 @Controller('users')
