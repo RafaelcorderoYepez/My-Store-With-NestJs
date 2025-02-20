@@ -1,75 +1,55 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
+
+import { BrandsService } from '../services/brands.service';
+import { CreateBrandsDto, UpdateBrandsDto } from '../dtos/brands.dtos';
 
 @Controller('brands')
 export class BrandsController {
+  constructor(private brandsService: BrandsService) {}
   // brands list paginated by query
 
   @Get()
-  getQuery(
-    @Query('limit') limit = 25,
-    @Query('offset') offset = 0,
-    @Query('categoryId') categoryId: number,
-  ): {
-    message: string;
-    detail: { limit: string; offset: string; categoryId: string };
-  } {
-    return {
-      message: `Brands list`,
-      detail: {
-        limit: `${limit}`,
-        offset: `${offset}`,
-        categoryId: `${categoryId}`,
-      },
-    };
-  }
-
-  // brands filtered
-  @Get('filter')
-  getFilter() {
-    return { Response: `I am a brand filter` };
+  getQuery(@Query('limit') limit = 25, @Query('offset') offset = 0) {
+    return this.brandsService.findQuery(limit, offset);
   }
 
   // Brand for Id
   @Get(':id')
   @HttpCode(HttpStatus.ACCEPTED)
-  getOne(@Param('id') id: any) {
-    return { Response: `Id: ${id}` };
-  }
-
-  // Brands for categories
-  @Get(':id/categories/:categoryId')
-  getByCategory(
-    @Param('id') id: string,
-    @Param('categoryId') categoryId: string,
-  ) {
-    return { params: { BrandId: `${id}`, categoryId: `${categoryId}` } };
+  getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.brandsService.findOne(id);
   }
 
   // create a brand
   @Post()
-  create(@Body() payload: any) {
-    return {
-      message: 'to create a brand',
-      payload: payload
-    };
+  create(@Body() payload: CreateBrandsDto) {
+    return this.brandsService.create(payload);
   }
 
   // create a brand
   @Put(':id')
-  update(@Param('id') id: any, @Body() payload: any) {
-    return {
-      message: 'to update a brand',
-      id: id,
-      payload: payload
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateBrandsDto,
+  ) {
+    return this.brandsService.update(id, payload);
   }
 
   // delete a brand
   @Delete(':id')
-  delete(@Param('id') id: any) {
-    return {
-      message: 'to delete a brand',
-      id: id
-    };
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.brandsService.delete(id);
   }
 }
