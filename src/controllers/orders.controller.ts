@@ -1,71 +1,57 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
+
+import { OrdersService } from '../services/orders.service';
+import { CreateOrdersDto, UpdateOrdersDto } from '../dtos/orders.dtos';
 
 @Controller('orders')
 export class OrdersController {
+  constructor(private ordersService: OrdersService) {}
   // Orders list paginated by query
 
   @Get()
   getQuery(
     @Query('limit') limit = 25,
     @Query('offset') offset = 0,
-    @Query('userId') userId: number,
-  ): {
-    message: string;
-    detail: { limit: string; offset: string; userId: string };
-  } {
-    return {
-      message: `Orders list`,
-      detail: {
-        limit: `${limit}`,
-        offset: `${offset}`,
-        userId: `${userId}`,
-      },
-    };
-  }
-
-  // Orders filtered
-  @Get('filter')
-  getFilter() {
-    return { Response: `I am a Order filter` };
+    @Query('customer') customer: number,
+    @Query('user') user: number,
+  ) {
+    return this.ordersService.findQuery(limit, offset, customer, user);
   }
 
   // Order for Id
   @Get(':id')
-  getOne(@Param('id') id: string) {
-    return { Response: `Id: ${id}` };
-  }
-
-  // Orders for users
-  @Get(':id/users/:userId')
-  getByUser(@Param('id') id: string, @Param('userId') userId: string) {
-    return { params: { OrderId: `${id}`, UserId: `${userId}` } };
+  getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ordersService.findOne(id);
   }
 
   // create an order
   @Post()
-  create(@Body() payload: any) {
-    return {
-      message: 'to create an order',
-      payload: payload
-    };
+  create(@Body() payload: CreateOrdersDto) {
+    return this.ordersService.create(payload);
   }
 
   // create an order
   @Put(':id')
-  update(@Param('id') id: any, @Body() payload: any) {
-    return {
-      message: 'to update an order',
-      id: id,
-      payload: payload
-    };
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateOrdersDto,
+  ) {
+    return this.ordersService.update(id, payload);
   }
 
   // delete an order
   @Delete(':id')
-  delete(@Param('id') id: any) {
-    return {
-      message: 'to delete an order',
-      id: id
-    };
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.ordersService.delete(id);
   }
 }
