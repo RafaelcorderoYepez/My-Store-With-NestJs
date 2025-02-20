@@ -15,6 +15,5 @@ export class CreateBrandsDto {
   @IsUrl()
   @IsNotEmpty()
   readonly logo: string;
-
 }
 export class UpdateBrandsDto extends PartialType(CreateBrandsDto) {}
