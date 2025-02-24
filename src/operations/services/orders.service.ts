@@ -11,7 +11,7 @@ export class OrdersService {
     {
       id: 1,
       orderNumber: this.counterOrderNumber,
-      orderDate: new Date(2025, 1, 21),
+      orderDate: '01-01-2025',
       amount: 150,
       customer: 1,
       user: 1,

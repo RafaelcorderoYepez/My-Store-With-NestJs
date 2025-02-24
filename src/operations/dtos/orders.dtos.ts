@@ -1,38 +1,37 @@
-import {
-  IsString,
-  IsNumber,
-  IsPositive,
-  IsNotEmpty,
-  IsDate,
-} from 'class-validator';
+import { IsString, IsNumber, IsPositive, IsNotEmpty } from 'class-validator';
 
-import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CreateOrdersDto {
+  @ApiProperty()
   @IsNumber()
   @IsPositive()
   @IsNotEmpty()
   readonly orderNumber: number;
 
-  @IsDate()
-  @IsNotEmpty()
-  readonly orderDate: Date;
+  @ApiProperty()
+  @IsString()
+  readonly orderDate: string;
 
+  @ApiProperty()
   @IsNumber()
   @IsPositive()
   @IsNotEmpty()
   readonly amount: number;
 
+  @ApiProperty()
   @IsNumber()
   @IsPositive()
   @IsNotEmpty()
   readonly customer: number;
 
+  @ApiProperty()
   @IsNumber()
   @IsPositive()
   @IsNotEmpty()
   readonly user: number;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   readonly status: string;

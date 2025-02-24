@@ -10,6 +10,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
+import { ApiOperation } from '@nestjs/swagger';
+
 import { OrderDetailsService } from '../services/orderDetails.service';
 import {
   CreateOrderDetailsDto,
@@ -22,6 +24,7 @@ export class OrderDetailsController {
   // OrderDetails list paginated by query
 
   @Get()
+  @ApiOperation({ summary: 'Order Details list' })
   getQuery(
     @Query('limit') limit = 25,
     @Query('offset') offset = 0,
@@ -32,18 +35,22 @@ export class OrderDetailsController {
 
   // Order for Id
   @Get(':id')
+  @ApiOperation({ summary: 'Order Detail data by Order Detail Id' })
   getOne(@Param('id', ParseIntPipe) id: number) {
     return this.orderDetailsService.findOne(id);
   }
 
   // create an order
   @Post()
+  @ApiOperation({ summary: 'Create an Order Detail' })
   create(@Body() payload: CreateOrderDetailsDto) {
     return this.orderDetailsService.create(payload);
   }
 
   // create an order
   @Put(':id')
+  @ApiOperation({ summary: 'Update an Order Detail' })
+  @ApiOperation({ summary: 'Update an Order Detail' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateOrderDetailsDto,
@@ -53,6 +60,7 @@ export class OrderDetailsController {
 
   // delete an order
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete an Order Detail' })
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.orderDetailsService.delete(id);
   }
